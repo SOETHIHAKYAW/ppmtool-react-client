@@ -1,23 +1,45 @@
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import ProjectItem from "./ProjectItem";
-import { selectAllProjects } from "./projectSlice";
+import { useEffect } from "react";
+import { selectAllProjects,getProjectError,getProjectStatus,fetchProjects } from "./projectSlice";
 
 function ProjectList(){
+    const dispatch = useDispatch();
 
     const projects = useSelector(selectAllProjects);
+    const projectStatus = useSelector(getProjectStatus);
+    const error = useSelector(getProjectError);
 
-    const renderedProjects = projects.map(
-        (project)=>(
-                <ProjectItem 
-                    id={project.projectIdentifier} 
-                    projectName={project.projectName}
-                    description={project.description}
-                    startDate={project.startDate}
-                    endDate={project.endDate}
-                />)
-    );
+    useEffect(()=>{
+        if(projectStatus === 'idle'){
+            dispatch(fetchProjects)
+        }
+    },[projectStatus,dispatch]);
 
-    return renderedProjects;
+    let content;
+
+    if(projectStatus === 'loading'){
+        content = (<p>Loading....</p>);
+    }
+
+    if(projectStatus === 'succeeded'){
+        content = projects.map(
+            (project)=>(
+                    <ProjectItem 
+                        id={project.projectIdentifier} 
+                        projectName={project.projectName}
+                        description={project.description}
+                        startDate={project.startDate}
+                        endDate={project.endDate}
+                    />)
+        );
+    }
+
+    if(projectStatus === 'failed'){
+        content = (<p>{error}</p>);
+    }
+    
+    return content;
 
 }
 
