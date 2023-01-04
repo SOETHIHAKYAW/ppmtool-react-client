@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { addProject } from "./projectSlice";
+import { addNewProject } from "./projectSlice";
 
 function AddProjectForm(){
 
@@ -9,6 +9,7 @@ function AddProjectForm(){
     const [description,setDescription] = useState('');
     const [startDate,setStartDate] = useState('');
     const [endDate,setEndDate] = useState('');
+    const [addRequestStatus,setAddRequestStatus] = useState('idle')
 
     const onProjectNameChange = e => setProjectName(e.target.value);
     const onProjectIdentifierChange = e => setProjectIdentifier(e.target.value);
@@ -16,26 +17,43 @@ function AddProjectForm(){
     const onStartDateChange = e => setStartDate(e.target.value);
     const onEndDateChange = e => setEndDate(e.target.value);
 
+    const canSave = [projectName,projectIdentifier,description,startDate,endDate].every(Boolean) && addRequestStatus === 'idle'
+
     const dispatch = useDispatch();
 
     const onSubmit = (event)=>{
         event.preventDefault();
 
-        dispatch(
-            addProject(
-                projectName,
-                projectIdentifier,
-                description,
-                startDate,
-                endDate
-            ),
-        );
+        if(canSave){
+
+            try {
+
+                setAddRequestStatus('pending');
+
+                dispatch(
+                    addNewProject({
+                     projectName,
+                     projectIdentifier,
+                     description,
+                     startDate,
+                     endDate
+                    }
+                ),
+                );
+                
+            } catch (error) {
+                console.log(error)
+            }finally{
+                setAddRequestStatus('idle')
+            }
+           
 
         setProjectName('')
         setProjectIdentifier('')
         setDescription('')
         setStartDate('')
         setEndDate('')
+        }
     }
 
 
@@ -93,7 +111,7 @@ function AddProjectForm(){
                             />
                         </div>
 
-                        <input type="submit" className="btn btn-primary btn-block mt-4" />
+                        <input type="submit" className="btn btn-primary btn-block mt-4" disabled={!canSave}/>
                     </form>
                 </div>
             </div>

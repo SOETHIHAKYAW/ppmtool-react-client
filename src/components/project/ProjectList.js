@@ -12,7 +12,7 @@ function ProjectList(){
 
     useEffect(()=>{
         if(projectStatus === 'idle'){
-            dispatch(fetchProjects)
+            dispatch(fetchProjects())
         }
     },[projectStatus,dispatch]);
 
