@@ -1,14 +1,20 @@
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { useState } from "react";
-import { addNewProject } from "./projectSlice";
+import { addNewProject,selectProjectByIdentifier,updateProject } from "./projectSlice";
+import { useParams } from "react-router-dom";
 
-function AddProjectForm(){
+function AddProjectForm(props){
 
-    const [projectName,setProjectName] = useState('');
-    const [projectIdentifier,setProjectIdentifier] = useState('');
-    const [description,setDescription] = useState('');
-    const [startDate,setStartDate] = useState('');
-    const [endDate,setEndDate] = useState('');
+    const { projectId } = useParams()
+    const project = useSelector((state)=>selectProjectByIdentifier(state,String(projectId)))
+    console.log(projectId)
+    console.log(project)
+
+    const [projectName,setProjectName] = useState(project?.projectName);
+    const [projectIdentifier,setProjectIdentifier] = useState(project?.projectIdentifier);
+    const [description,setDescription] = useState(project?.description);
+    const [startDate,setStartDate] = useState(project?.startDate);
+    const [endDate,setEndDate] = useState(project?.endDate);
     const [addRequestStatus,setAddRequestStatus] = useState('idle')
 
     const onProjectNameChange = e => setProjectName(e.target.value);
@@ -18,6 +24,7 @@ function AddProjectForm(){
     const onEndDateChange = e => setEndDate(e.target.value);
 
     const canSave = [projectName,projectIdentifier,description,startDate,endDate].every(Boolean) && addRequestStatus === 'idle'
+    const isEdit = props.mode === 'edit'
 
     const dispatch = useDispatch();
 
@@ -25,12 +32,19 @@ function AddProjectForm(){
         event.preventDefault();
 
         if(canSave){
-
             try {
 
                 setAddRequestStatus('pending');
 
                 dispatch(
+                    isEdit?
+                    updateProject({
+                     projectName,
+                     projectIdentifier,
+                     description,
+                     startDate,
+                     endDate  
+                    }):
                     addNewProject({
                      projectName,
                      projectIdentifier,
@@ -81,7 +95,9 @@ function AddProjectForm(){
                                 className="form-control form-control-lg" 
                                 placeholder="Unique Project ID"
                                 value={projectIdentifier}
-                                onChange={onProjectIdentifierChange} />
+                                onChange={onProjectIdentifierChange} 
+                                disabled={isEdit}
+                                />
                         </div>
                        
                         <div className="form-group">
@@ -111,7 +127,12 @@ function AddProjectForm(){
                             />
                         </div>
 
-                        <input type="submit" className="btn btn-primary btn-block mt-4" disabled={!canSave}/>
+                        <input 
+                            type="submit" 
+                            className="btn btn-primary btn-block mt-4" 
+                            disabled={!canSave}
+                            value={isEdit?'Update':'Save'}
+                            />
                     </form>
                 </div>
             </div>

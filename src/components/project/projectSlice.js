@@ -3,6 +3,7 @@ import axios from "axios";
 
 const GET_ALL_PROJECTS = 'http://localhost:8383/api/project/all';
 const POST_NEW_PROJECT = 'http://localhost:8383/api/project/create';
+const DELETE_PROJECT = 'http://localhost:8383/api/project/delete/'
 
 export const fetchProjects = createAsyncThunk('projects/fetchProjects', async ()=>{
     const response = await axios.get(GET_ALL_PROJECTS);
@@ -11,6 +12,16 @@ export const fetchProjects = createAsyncThunk('projects/fetchProjects', async ()
 
 export const addNewProject = createAsyncThunk('projects/addNewProject', async (initialProject)=>{
     const response = await axios.post(POST_NEW_PROJECT,initialProject)
+    return response.data
+})
+
+export const updateProject = createAsyncThunk('projects/addUpdateProject', async (initialProject)=>{
+    const response = await axios.post(POST_NEW_PROJECT,initialProject)
+    return response.data
+})
+
+export const deleteProject = createAsyncThunk('projects/deleteProject', async (projectId)=>{
+    const response = await axios.delete(`${DELETE_PROJECT}${projectId}`)
     return response.data
 })
 
@@ -53,7 +64,8 @@ export const projectSlice = createSlice({
             .addCase(fetchProjects.fulfilled,(state,action)=>{
                 state.status = 'succeeded';
 
-                state.projects = state.projects.concat(action.payload);
+                //state.projects = state.projects.concat(action.payload);
+                state.projects = action.payload
             })
             .addCase(fetchProjects.rejected,(state,action)=>{
                 state.status = 'failed';
@@ -61,12 +73,19 @@ export const projectSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(addNewProject.fulfilled,(state,action)=>{
-                state.status = 'succeeded'
                 state.projects.push(action.payload)
             })
-            .addCase(addNewProject.rejected,(state,action)=>{
-                state.status = 'failed'
-                state.error = action.error.message
+            .addCase(updateProject.fulfilled,(state,action)=>{
+                const project = action.payload
+
+                const projects = state.projects.filter(p => p.projectIdentifier !== project.projectIdentifier)
+
+                state.projects = [project,...projects]
+            })
+            .addCase(deleteProject.fulfilled,(state,action)=>{
+                const projects = state.projects.filter(p => p.projectIdentifier !== action.payload)
+
+                state.projects = projects
             })
     }
     
@@ -75,6 +94,7 @@ export const projectSlice = createSlice({
 export const selectAllProjects = (state)=>state.projects.projects;
 export const getProjectStatus =  (state)=>state.projects.status;
 export const getProjectError =  (state)=>state.projects.error;
+export const selectProjectByIdentifier = (state,projectId)=> state.projects.projects.find(project => project.projectIdentifier === projectId)
 
 export const { addProject } = projectSlice.actions;
 

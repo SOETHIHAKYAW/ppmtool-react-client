@@ -8,9 +8,15 @@ function App() {
   <div>
     <MainNavigation />
 
-    <Routes>
-      <Route path='/dashboard' element={<Dashboard />}/>
-      <Route path='/add-project' element={<AddProjectForm />}/>
+    <Routes path='/'>
+      <Route>
+        <Route path='dashboard' element={<Dashboard />}/>
+
+        <Route path="project">
+          <Route path='create' element={<AddProjectForm />}/>
+          <Route path='edit/:projectId' element={<AddProjectForm mode='edit' />}/>
+        </Route>
+      </Route>
     </Routes>
   </div>);
 }
