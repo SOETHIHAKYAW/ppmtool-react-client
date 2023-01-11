@@ -83,7 +83,8 @@ export const projectSlice = createSlice({
                 state.projects = [project,...projects]
             })
             .addCase(deleteProject.fulfilled,(state,action)=>{
-                const projects = state.projects.filter(p => p.projectIdentifier !== action.payload)
+                console.log(action.payload)
+                const projects = state.projects.filter(p => p.projectIdentifier !== String(action.payload))
 
                 state.projects = projects
             })
