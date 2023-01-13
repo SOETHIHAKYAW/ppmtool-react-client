@@ -2,10 +2,12 @@ import { useDispatch,useSelector } from "react-redux";
 import { useState } from "react";
 import { addNewProject,selectProjectByIdentifier,updateProject } from "./projectSlice";
 import { useParams,useNavigate } from "react-router-dom";
+import { getToken } from "../auth/authSlice";
 
 function AddProjectForm(props){
 
     const { projectId } = useParams()
+    const token = useSelector(getToken)
     const project = useSelector((state)=>selectProjectByIdentifier(state,String(projectId)))
     const navigate = useNavigate()
 
@@ -29,6 +31,7 @@ function AddProjectForm(props){
 
     const onSubmit = (event)=>{
         event.preventDefault();
+        console.log(token)
 
         if(canSave){
             try {
@@ -42,14 +45,18 @@ function AddProjectForm(props){
                      projectIdentifier,
                      description,
                      startDate,
-                     endDate  
+                     endDate,
+                     token 
                     }):
                     addNewProject({
-                     projectName,
-                     projectIdentifier,
-                     description,
-                     startDate,
-                     endDate
+                     project:{
+                        projectName,
+                        projectIdentifier,
+                        description,
+                        startDate,
+                        endDate,
+                     },
+                     token
                     }
                 ),
                 ).unwrap();

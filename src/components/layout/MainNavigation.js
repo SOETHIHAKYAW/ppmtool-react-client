@@ -22,14 +22,14 @@ function MainNavigation(){
 
                 <ul className="navbar-nav ml-auto">
                     <li className="nav-item">
-                        <a className="nav-link " href="register.html">
+                        <Link to='/register' className="nav-link ">
                             Sign Up
-                        </a>
+                        </Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="login.html">
+                        <Link to='/login' className="nav-link">
                             Login
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </div>

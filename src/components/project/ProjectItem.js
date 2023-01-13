@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { deleteProject } from "./projectSlice";
 import { useState } from "react";
 import ConfirmModal from "../utility/ConfirmModal";
 import Backdrop from "../utility/Backdrop";
+import { getToken } from "../auth/authSlice";
 
 function ProjectItem(props){
+    const token = useSelector(getToken)
+
     const [isModalOpen,setModalOpen] = useState(false)
     const dispatch = useDispatch();
 
@@ -22,7 +25,7 @@ function ProjectItem(props){
     }
 
     function confirmHandler(){
-        dispatch(deleteProject(props.id)).unwrap()
+        dispatch(deleteProject(props.id,token)).unwrap()
 
         setModalOpen(false)
     }
@@ -52,11 +55,11 @@ function ProjectItem(props){
                                 <i className="fa fa-edit pr-1">Update Project Info</i>
                             </li>
                         </Link>
-                        <a onClick={deleteHandler}>
+                        <Link onClick={deleteHandler}>
                             <li className="list-group-item delete">
                                 <i className="fa fa-minus-circle pr-1">Delete Project</i>
                             </li>
-                        </a>
+                        </Link>
                     </ul>
                     {isModalOpen && <ConfirmModal onCancel={cancelHandler} onConfirm={confirmHandler}/>}
                     {isModalOpen && <Backdrop onBackdrop={backdropHandler}/>} 

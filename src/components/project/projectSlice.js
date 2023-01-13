@@ -3,25 +3,44 @@ import axios from "axios";
 
 const GET_ALL_PROJECTS = 'http://localhost:8383/api/project/all';
 const POST_NEW_PROJECT = 'http://localhost:8383/api/project/create';
-const DELETE_PROJECT = 'http://localhost:8383/api/project/delete/'
+const DELETE_PROJECT = 'http://localhost:8383/api/project/identifier/'
 
-export const fetchProjects = createAsyncThunk('projects/fetchProjects', async ()=>{
-    const response = await axios.get(GET_ALL_PROJECTS);
+export const fetchProjects = createAsyncThunk('projects/fetchProjects', async (token)=>{
+    const response = await axios.get(GET_ALL_PROJECTS,{
+        headers:{
+            'Authorization':token,
+        }
+    });
     return response.data;
 });
 
-export const addNewProject = createAsyncThunk('projects/addNewProject', async (initialProject)=>{
-    const response = await axios.post(POST_NEW_PROJECT,initialProject)
+export const addNewProject = createAsyncThunk('projects/addNewProject', async (data)=>{
+    console.log(data.token)
+    const response = await axios.post(POST_NEW_PROJECT,data.project,{
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization':data.token,
+        },  
+    })
     return response.data
 })
 
-export const updateProject = createAsyncThunk('projects/addUpdateProject', async (initialProject)=>{
-    const response = await axios.post(POST_NEW_PROJECT,initialProject)
+export const updateProject = createAsyncThunk('projects/addUpdateProject', async (project,token)=>{
+    const response = await axios.post(POST_NEW_PROJECT,project,{
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization':token,
+        },
+    })
     return response.data
 })
 
-export const deleteProject = createAsyncThunk('projects/deleteProject', async (projectId)=>{
-    const response = await axios.delete(`${DELETE_PROJECT}${projectId}`)
+export const deleteProject = createAsyncThunk('projects/deleteProject', async (projectId,token)=>{
+    const response = await axios.delete(`${DELETE_PROJECT}${projectId}`,{
+        headers:{
+            'Authorization':token,
+        },
+    })
     return response.data
 })
 
