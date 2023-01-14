@@ -25,20 +25,20 @@ export const addNewProject = createAsyncThunk('projects/addNewProject', async (d
     return response.data
 })
 
-export const updateProject = createAsyncThunk('projects/addUpdateProject', async (project,token)=>{
-    const response = await axios.post(POST_NEW_PROJECT,project,{
+export const updateProject = createAsyncThunk('projects/addUpdateProject', async (data)=>{
+    const response = await axios.post(POST_NEW_PROJECT,data.project,{
         headers:{
             'Content-Type':'application/json',
-            'Authorization':token,
+            'Authorization':data.token,
         },
     })
     return response.data
 })
 
-export const deleteProject = createAsyncThunk('projects/deleteProject', async (projectId,token)=>{
-    const response = await axios.delete(`${DELETE_PROJECT}${projectId}`,{
+export const deleteProject = createAsyncThunk('projects/deleteProject', async (data)=>{
+    const response = await axios.delete(`${DELETE_PROJECT}${data.projectId}`,{
         headers:{
-            'Authorization':token,
+            'Authorization':data.token,
         },
     })
     return response.data

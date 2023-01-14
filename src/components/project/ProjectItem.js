@@ -25,7 +25,7 @@ function ProjectItem(props){
     }
 
     function confirmHandler(){
-        dispatch(deleteProject(props.id,token)).unwrap()
+        dispatch(deleteProject({projectId:props.id,token})).unwrap()
 
         setModalOpen(false)
     }
@@ -45,7 +45,7 @@ function ProjectItem(props){
                 </div>
                 <div className="col-md-4 d-none d-lg-block">
                     <ul className="list-group">
-                        <Link to='/project/projectboard'>
+                        <Link to={`/project/projectboard/${props.id}`}>
                             <li className="list-group-item board">
                                 <i className="fa fa-flag-checkered pr-1">Project Board </i>
                             </li>

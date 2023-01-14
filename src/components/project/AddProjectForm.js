@@ -41,14 +41,6 @@ function AddProjectForm(props){
                 dispatch(
                     isEdit?
                     updateProject({
-                     projectName,
-                     projectIdentifier,
-                     description,
-                     startDate,
-                     endDate,
-                     token 
-                    }):
-                    addNewProject({
                      project:{
                         projectName,
                         projectIdentifier,
@@ -57,8 +49,17 @@ function AddProjectForm(props){
                         endDate,
                      },
                      token
-                    }
-                ),
+                    }):
+                    addNewProject({
+                        project:{
+                            projectName,
+                            projectIdentifier,
+                            description,
+                            startDate,
+                            endDate,
+                        },
+                        token
+                    }),
                 ).unwrap();
 
                 navigate('/dashboard')

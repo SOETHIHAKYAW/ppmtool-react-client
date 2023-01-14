@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom"
 
-function ProjectTask(){
+function ProjectTask(props){
     return (
         <div class="card mb-1 bg-light">
 
                         <div class="card-header text-primary">
-                            ID: projectSequence -- Priority: priorityString
+                            ID: {props.projectSequence} -- Priority: {props.priority}
                         </div>
                         <div class="card-body bg-light">
-                            <h5 class="card-title">project_task.summary</h5>
+                            <h5 class="card-title">{props.summary}</h5>
                             <p class="card-text text-truncate ">
-                                project_task.acceptanceCriteria
+                                {props.acceptanceCriteria}
                             </p>
                             <Link to='/project-task/create' class="btn btn-primary">
                                 View / Update

@@ -23,7 +23,7 @@ function App() {
         <Route path="project">
           <Route path='create' element={<AddProjectForm />}/>
           <Route path='edit/:projectId' element={<AddProjectForm mode='edit' />}/>
-          <Route path='projectboard' element={<ProjectBoard/>} />
+          <Route path='projectboard/:projectId' element={<ProjectBoard/>} />
         </Route>
 
         <Route path='project-task'>
