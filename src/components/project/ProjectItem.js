@@ -5,6 +5,7 @@ import { useState } from "react";
 import ConfirmModal from "../utility/ConfirmModal";
 import Backdrop from "../utility/Backdrop";
 import { getToken } from "../auth/authSlice";
+import { resetStatus } from "../project-task/projectTaskSlice";
 
 function ProjectItem(props){
     const token = useSelector(getToken)
@@ -30,6 +31,10 @@ function ProjectItem(props){
         setModalOpen(false)
     }
 
+    const resetStatusHandler = ()=>{
+        dispatch(resetStatus())
+    }
+
     return (
         <div className="container">
         <div className="card card-body bg-light mb-3">
@@ -45,7 +50,7 @@ function ProjectItem(props){
                 </div>
                 <div className="col-md-4 d-none d-lg-block">
                     <ul className="list-group">
-                        <Link to={`/project/projectboard/${props.id}`}>
+                        <Link to={`/project/projectboard/${props.id}`} onClick={resetStatusHandler}>
                             <li className="list-group-item board">
                                 <i className="fa fa-flag-checkered pr-1">Project Board </i>
                             </li>

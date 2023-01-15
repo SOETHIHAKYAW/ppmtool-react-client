@@ -2,10 +2,22 @@ import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const GET_ALL_TASKS = 'http://localhost:8383/api/task/all/'
+const POST_TASK = 'http://localhost:8383/api/task/create/'
 
 export const fetchProjectTasks = createAsyncThunk('projectTasks/fetchProjectTasks',async (data)=>{
+    console.log(data.projectId)
     const response = await axios.get(`${GET_ALL_TASKS}${data.projectId}`,{
         headers:{
+            'Authorization':data.token
+        }
+    })
+    return response.data
+})
+
+export const createProjectTask = createAsyncThunk('projectTasks/createProjectTask',async (data)=>{
+    const response = await axios.post(`${POST_TASK}${data.projectId}`,data.projectTask,{
+        headers:{
+            'Content-Type':'application/json',
             'Authorization':data.token
         }
     })
@@ -21,7 +33,11 @@ const initialState = {
 export const projectTaskSlice = createSlice({
     name:'projectTaskSlice',
     initialState,
-    reducers:{},
+    reducers:{
+        resetStatus: state => {
+            state.status = 'idle'
+        } 
+    },
     extraReducers(builder){
         builder
             .addCase(fetchProjectTasks.pending,(state,action)=>{
@@ -34,6 +50,9 @@ export const projectTaskSlice = createSlice({
             .addCase(fetchProjectTasks.rejected,(state,action)=>{
                 state.status = 'failed'
                 console.error(action.error.message)
+            })
+            .addCase(createProjectTask.fulfilled,(state,action)=>{
+                state.projectTasks.push(action.payload)
             })
     }
 })
@@ -58,5 +77,5 @@ export const selectTaskWithProgress = state => {
 
  export const getStatus = state => state.projectTasks.status
  export const getError = state => state.projectTasks.error
-
+ export const { resetStatus } = projectTaskSlice.actions
 export default projectTaskSlice.reducer
