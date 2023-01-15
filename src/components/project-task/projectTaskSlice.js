@@ -3,6 +3,7 @@ import axios from "axios";
 
 const GET_ALL_TASKS = 'http://localhost:8383/api/task/all/'
 const POST_TASK = 'http://localhost:8383/api/task/create/'
+const PATH_TASK = 'http://localhost:8383/api/task/update/'
 
 export const fetchProjectTasks = createAsyncThunk('projectTasks/fetchProjectTasks',async (data)=>{
     console.log(data.projectId)
@@ -16,6 +17,16 @@ export const fetchProjectTasks = createAsyncThunk('projectTasks/fetchProjectTask
 
 export const createProjectTask = createAsyncThunk('projectTasks/createProjectTask',async (data)=>{
     const response = await axios.post(`${POST_TASK}${data.projectId}`,data.projectTask,{
+        headers:{
+            'Content-Type':'application/json',
+            'Authorization':data.token
+        }
+    })
+    return response.data
+})
+
+export const updateProjectTask = createAsyncThunk('projectTasks/updateProjectTask',async (data)=>{
+    const response = await axios.patch(`${PATH_TASK}${data.projectId}/${data.projectSequence}`,data.projectTask,{
         headers:{
             'Content-Type':'application/json',
             'Authorization':data.token
@@ -53,6 +64,9 @@ export const projectTaskSlice = createSlice({
             })
             .addCase(createProjectTask.fulfilled,(state,action)=>{
                 state.projectTasks.push(action.payload)
+            })
+            .addCase(updateProjectTask.fulfilled,(state,action)=>{
+                console.log(action.payload)
             })
     }
 })

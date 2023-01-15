@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom"
+import { Link,useParams } from "react-router-dom"
 
 function ProjectTask(props){
+
+    const { projectId } = useParams()
+
     return (
         <div class="card mb-1 bg-light">
 
@@ -12,7 +15,7 @@ function ProjectTask(props){
                             <p class="card-text text-truncate ">
                                 {props.acceptanceCriteria}
                             </p>
-                            <Link to='/project-task/create' class="btn btn-primary">
+                            <Link to={`/project-task/update/${projectId}`} class="btn btn-primary">
                                 View / Update
                             </Link>
 
